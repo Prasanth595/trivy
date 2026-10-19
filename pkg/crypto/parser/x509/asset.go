@@ -26,6 +26,10 @@ func objectToAssets(obj object) ([]ftypes.CryptoAsset, error) {
 		return describeStandaloneKey(obj, ftypes.CryptoKeyTypePrivate)
 	case objectEncryptedPrivateKey:
 		return describeEncryptedPrivateKey(obj)
+	case objectECAlgorithm:
+		// The algorithm is derived and has no encoded form.
+		algorithm := crypto.DescribeAlgorithm(oidECPublicKey.String(), 0, 0, obj.curve)
+		return []ftypes.CryptoAsset{{CryptoAssetInfo: algorithm}}, nil
 	default:
 		return nil, xerrors.Errorf("object kind %d has no description", obj.kind)
 	}
